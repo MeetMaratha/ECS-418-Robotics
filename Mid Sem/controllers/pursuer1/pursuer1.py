@@ -7,11 +7,10 @@ import sys
 TIME_STEP = 32
 SENSING_VALUE = 115
 COUNTER = 0
-GOAL = [(-2.4, -2.54, 0), (-1.86, -1.6, 0)]
-ROBOT_NAME = "pursuer"
+GOAL = [(-3.24, -3.16, 0), (-3.24, -4.51, 0), (-2.62, -4.245, 0), (-2.62, -2.935, 0)]
+ROBOT_NAME = "pursuer1"
 MAX_SPEED = 6.28
 COLLISION = False
-IDX = 0
 
 # =================== FUNCTIONS =======================
 
@@ -44,8 +43,8 @@ def goToGoal(translation_field, rotation_field, max_speed : float, goal : list) 
     elif position[0] < 0 and position[1] < 0 : desired_angle = slope_theta # For Third Quadrant
 
     elif position[0] < 0.0 and position[1] > 0.0 : desired_angle = slope_theta # For Second Quadrant
-    
-    if np.abs(desired_angle - z_theta) > 1e-2 :
+
+    if np.abs(desired_angle - z_theta) > 1e-1 :
         # If the difference of desired angle and z_theta value is significant we need to rotate
 
         left_speed = - MAX_SPEED * 0.25
@@ -73,16 +72,39 @@ def _atGoal(point1 : list, point2 : list) -> bool:
     if np.sqrt( (point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2 ) < 1e-1 : return True
     else : return False
 
-def _moveForward20(robot, left_motor, right_motor):
-    temp = 40
-    print(temp)
-    while robot.step(TIME_STEP) != -1:
-        if temp == 0:
-            break
-        left_motor.setVelocity(MAX_SPEED * 0.25)
-        right_motor.setVelocity(MAX_SPEED * 0.25)
-        temp -= 1
-    print("Done")
+def _distance(position : list, goal : list) -> float:
+    """Returns distance between two points
+
+    Args:
+        position (list): Position of the robot
+        goal (list): Goal position
+
+    Returns:
+        float: Distance between Robot and goal
+    """
+    return np.sqrt( (position[0] - goal[0]) ** 2 + (position[1] - goal[1]) ** 2 )
+
+def _setGoal(position : list, goals : list, exclude : list or None = None) -> list:
+    """Returns the newly set goal position
+
+    Args:
+        position (list): Position of the robot
+        goals (list): Goal Loacations which we can choose from
+        exclude (listorNone, optional): Position that needs to be excluded from the computation, most probably it is the current position of robot. Defaults to None.
+
+    Returns:
+        list: Next goal position for the robot
+    """
+    temp = None
+    distance = 100000
+    for goal in goals:
+        if exclude == goal : continue
+        elif _distance(position, goal) < distance:
+            temp = goal
+            distance = _distance(position, goal)
+        print(f"Pursuer 1 : {temp} | Distance {_distance(position, goal)} | Current : {distance} | goal : {goal}")
+    print(f"Pursuer 1 : {temp}")
+    return temp
 
 # =================== MAIN FUCTION ====================
 
@@ -97,7 +119,7 @@ if __name__ == "__main__":
         # There is no robot with the DEF as the one mentioned above
         sys.stderr.write(f"No DEF for {ROBOT_NAME} node found in the current world file\n")
         sys.exit()
-    goal = GOAL[IDX]
+    
 
     # ============== COMPONENTS INITALIZATION AND FIELD VALUE POINTERS =============
     translation_field = e_puck.getField("translation")
@@ -132,7 +154,11 @@ if __name__ == "__main__":
     camera2.recognitionEnable(TIME_STEP)
     camera3.recognitionEnable(TIME_STEP)
     camera4.recognitionEnable(TIME_STEP)
+    
+    # ============ SETTING GOAL ==================
 
+    goal = _setGoal(translation_field.getSFVec3f(), GOAL)
+    
     # ============== LOOP =================
 
     while robot.step(TIME_STEP) != -1:
@@ -179,26 +205,17 @@ if __name__ == "__main__":
                 # Move forward a bit after turning a bit
                 left_speed = MAX_SPEED * 0.25
                 right_speed = MAX_SPEED * 0.25
-
-
-        # if np.abs(translation_field.getSFVec3f()[0]) < 5e-2 or np.abs(translation_field.getSFVec3f()[1]) < 5e-2:
-            # _moveForward20(robot, left_motor, right_motor)
-            # left_speed = 0.0
-            # right_speed = 0.0
-            # print(goal)
     
-        # =============== CHECKING IF IT IS AT THE MID-POINT ==============
+        # =============== CHECKING IF IT IS AT THE MID-POINT AND IF SO, SETTING THE NEW GOAL ==============
         if _atGoal(translation_field.getSFVec3f(), goal):
-            IDX += 1
-            IDX = IDX % len(GOAL)
-            goal = GOAL[IDX]
+            goal = _setGoal(translation_field.getSFVec3f(), GOAL, goal)
             left_speed = 0.0
             right_speed = 0.0
         
         # =============== CHECKING IF IT HAS FOUND THE EVADER ==============
 
         if camera1.getRecognitionNumberOfObjects() > 0 or camera2.getRecognitionNumberOfObjects() > 0 or camera3.getRecognitionNumberOfObjects() > 0 or camera4.getRecognitionNumberOfObjects() > 0:
-            print(f"We have captured the evader !!!!")
+            print(f"We have captured the evade !!!!")
             left_motor.setVelocity(0.0)
             right_motor.setVelocity(0.0)
             sys.exit()

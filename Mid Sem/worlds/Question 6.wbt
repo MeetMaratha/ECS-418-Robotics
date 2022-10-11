@@ -8,18 +8,19 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.2908611100108222 -0.04235371065375772 0.9558273787024153 3.4181909117676734
-  position 0.5432911084490318 0.07668546050898063 0.5953569614752507
+  orientation -0.2008903009447088 0.00875000934963678 0.9795746650065659 3.056325439129087
+  position -0.3530927112144716 -4.307278326851962 1.519700552653976
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 RectangleArena {
+  translation -3.06 -3.72 0
   floorSize 2 2
 }
 Solid {
-  translation -0.31 -0.3 0.05
+  translation -2.62 -3.5 0.05
   children [
     Shape {
       appearance Plaster {
@@ -34,12 +35,12 @@ Solid {
   }
 }
 DEF pursuer1 Robot {
-  translation -0.31 0.045 -7.35278e-05
-  rotation 1 0 0 7.466131738618093e-05
+  translation -3.61 -4.195000000008068 -0.00032494897259400385
+  rotation 1 -8.766615005025344e-17 -6.26853259380446e-17 5.977605530045039e-05
   children [
     HingeJoint {
       jointParameters HingeJointParameters {
-        position 1.2160314259330464e-08
+        position 1.2160314259344098e-08
         axis 0 1 0
         anchor 0 0 0.02
       }
@@ -188,11 +189,13 @@ DEF pursuer1 Robot {
           density -1
           mass 0.005
         }
+        linearVelocity 5.300756588785357e-21 9.300934508124464e-06 0.002031035459789843
+        angularVelocity -0.00046497197129304025 2.623000871980304e-19 2.2329521861197722e-20
       }
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position 1.2158054419825266e-08
+        position 1.2158054419825347e-08
         axis 0 1 0
         anchor 0 0 0.02
       }
@@ -221,6 +224,8 @@ DEF pursuer1 Robot {
         name "right wheel"
         boundingObject USE EPUCK_WHEEL_BOUNDING_OBJECT
         physics USE EPUCK_WHEEL_PHYSICS
+        linearVelocity -3.2792510558915672e-21 9.305465117500495e-06 0.002055225471346356
+        angularVelocity -0.00046535691588624846 -1.612514297385927e-19 4.338469242068245e-19
       }
     }
     DEF BATTERY_CONNECTOR Transform {
@@ -1729,18 +1734,20 @@ DEF pursuer1 Robot {
       0 0 0
     ]
   }
-  controller "pursuer"
+  controller "pursuer1"
   supervisor TRUE
   cpuConsumption 1.11
   remoteControl "e-puck_bluetooth"
+  linearVelocity 6.153575024351274e-21 6.977214463520428e-06 0.002035720075453469
+  angularVelocity -0.0004651644401876686 -1.6375614837731807e-19 -1.1710241037351627e-19
 }
 DEF pursuer2 Robot {
-  translation -0.59 -0.57 -8.62057e-05
-  rotation 1 0 0 7.466131738618093e-05
+  translation -3.64 -3.7025 -0.000284887
+  rotation 1 6.033064277234771e-17 -5.409301967079746e-17 5.9776036304213764e-05
   children [
     HingeJoint {
       jointParameters HingeJointParameters {
-        position 1.2160314259330464e-08
+        position 1.2160314259330332e-08
         axis 0 1 0
         anchor 0 0 0.02
       }
@@ -1893,7 +1900,7 @@ DEF pursuer2 Robot {
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position 1.2158054419825266e-08
+        position 1.215805441981158e-08
         axis 0 1 0
         anchor 0 0 0.02
       }
@@ -3430,21 +3437,18 @@ DEF pursuer2 Robot {
       0 0 0
     ]
   }
-  recognitionColors [
-    0 0 0
-  ]
-  controller "pursuer"
+  controller "pursuer2"
   supervisor TRUE
   cpuConsumption 1.11
   remoteControl "e-puck_bluetooth"
 }
 DEF evader Robot {
-  translation 0.65 0.04 4.55434e-05
-  rotation 1 0 0 7.466131738618093e-05
+  translation -2.37 -3.520000000008068 -0.00018903777215593595
+  rotation 0.9999999999999999 -4.6728241867146e-17 1.668249114116226e-17 5.977598333199069e-05
   children [
     HingeJoint {
       jointParameters HingeJointParameters {
-        position 1.2160314259330464e-08
+        position 1.2160314259344174e-08
         axis 0 1 0
         anchor 0 0 0.02
       }
@@ -3593,11 +3597,13 @@ DEF evader Robot {
           density -1
           mass 0.005
         }
+        linearVelocity 7.010751447125841e-21 9.300988107786672e-06 0.0009708918028265235
+        angularVelocity -0.0004649748665824906 3.4103209997407974e-19 1.404620868816546e-18
       }
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position 1.2158054419825266e-08
+        position 1.2158054419825423e-08
         axis 0 1 0
         anchor 0 0 0.02
       }
@@ -3626,6 +3632,8 @@ DEF evader Robot {
         name "right wheel"
         boundingObject USE EPUCK_WHEEL_BOUNDING_OBJECT
         physics USE EPUCK_WHEEL_PHYSICS
+        linearVelocity -1.835991559409961e-21 9.305501486200734e-06 0.0009950819290401203
+        angularVelocity -0.00046535851906642203 -8.240669246473076e-20 1.599848384381515e-19
       }
     }
     DEF BATTERY_CONNECTOR Transform {
@@ -5141,9 +5149,11 @@ DEF evader Robot {
   supervisor TRUE
   cpuConsumption 1.11
   remoteControl "e-puck_bluetooth"
+  linearVelocity 2.9990435856711595e-21 6.9772482005776276e-06 0.0009756013391451764
+  angularVelocity -0.00046516668920203435 -8.728949472785707e-20 3.115962620579446e-20
 }
 Solid {
-  translation 0.35 0.15 0.05
+  translation -3.24 -3.95 0.05
   children [
     Shape {
       appearance Plaster {
