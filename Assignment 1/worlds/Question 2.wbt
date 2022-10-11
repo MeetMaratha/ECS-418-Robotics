@@ -2,129 +2,76 @@
 
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/backgrounds/protos/TexturedBackground.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/robots/gctronic/e-puck/protos/E-puck.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/geometries/protos/Rectangle.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/appearances/protos/Plaster.proto"
 EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/appearances/protos/Plaster.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/robots/gctronic/e-puck/protos/E-puck.proto"
 
 WorldInfo {
 }
 Viewpoint {
-  orientation 0.33787348389755534 -0.025620225572084102 -0.9408427673743173 3.284027148512797
-  position 2.5273819279018106 -1.0419808428356923 2.230693306149945
+  orientation -0.55804582557037 -0.45090240606150944 0.6966145826577462 4.166933075674483
+  position 0.40759339056562166 0.694376307689136 2.2177421050490276
 }
 TexturedBackground {
+}
+TexturedBackgroundLight {
 }
 RectangleArena {
   floorSize 2 2
 }
-TexturedBackgroundLight {
-}
-DEF e-puck E-puck {
-  translation 0.07 -0.79 0
-  name "robot"
-  controller "Bug_2_left"
-  supervisor TRUE
-  groundSensorsSlot [
-    GPS {
-    }
-  ]
-}
 Solid {
-  translation 0.15 -0.55 0
+  translation -0.192916 -0.332888 0.05
+  rotation 0 0 -1 -0.7854053071795866
   children [
     Shape {
       appearance Plaster {
       }
       geometry Box {
-        size 0.7 0.1 0.1
+        size 1 0.05 0.1
       }
     }
   ]
-  name "Wall 0"
   boundingObject Box {
-    size 0.7 0.1 0.1
+    size 1 0.05 0.1
   }
 }
 Solid {
-  translation 0.5 0 0
+  translation -0.583 -0.022153 0.05
+  rotation 0 0 1 -1.5707953071795862
   children [
     Shape {
       appearance Plaster {
       }
-      geometry Rectangle {
-        size 1 0.1
+      geometry Box {
+        size 1.3 0.05 0.1
       }
     }
   ]
-  name "Wall 1"
+  name "solid(1)"
   boundingObject Box {
-    size 0.001 1 0.1
+    size 1.3 0.05 0.1
   }
 }
 Solid {
-  translation 0 0.5 0
-  rotation 0 0 1 1.57
+  translation 0.104947 0.274333 0.05
+  rotation 0 0 -1 0.523596
   children [
     Shape {
       appearance Plaster {
       }
-      geometry Rectangle {
-        size 1 0.1
+      geometry Box {
+        size 1.5 0.05 0.1
       }
     }
   ]
-  name "Wall 2"
+  name "solid(2)"
   boundingObject Box {
-    size 0.001 1 0.1
+    size 1.5 0.05 0.1
   }
 }
-Solid {
-  translation -0.5 0.1 0
-  children [
-    Shape {
-      appearance Plaster {
-      }
-      geometry Rectangle {
-        size 0.8 0.1
-      }
-    }
-  ]
-  name "Wall 3"
-  boundingObject Box {
-    size 0.001 0.8 0.1
-  }
-}
-Solid {
-  translation -0.15 -0.3 0
-  rotation 0 0 1 1.57
-  children [
-    Shape {
-      appearance Plaster {
-      }
-      geometry Rectangle {
-        size 0.7 0.1
-      }
-    }
-  ]
-  name "Wall 4"
-  boundingObject Box {
-    size 0.001 0.7 0.1
-  }
-}
-Solid {
-  translation 0.2 -0.05 0
-  children [
-    Shape {
-      appearance Plaster {
-      }
-      geometry Rectangle {
-        size 0.5 0.1
-      }
-    }
-  ]
-  name "Wall 5"
-  boundingObject Box {
-    size 0.001 0.5 0.1
-  }
+DEF e-puck E-puck {
+  translation 0.75 0.610001 0
+  rotation 0 0 1 -1.5707953071795862
+  controller "Bug_0_left"
+  supervisor TRUE
 }

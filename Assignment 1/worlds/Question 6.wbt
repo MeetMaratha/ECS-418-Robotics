@@ -1,0 +1,130 @@
+#VRML_SIM R2022b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/robots/gctronic/e-puck/protos/E-puck.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/geometries/protos/Rectangle.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/appearances/protos/Plaster.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/floors/protos/RectangleArena.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation 0.33787348389755534 -0.025620225572084102 -0.9408427673743173 3.284027148512797
+  position 2.5273819279018106 -1.0419808428356923 2.230693306149945
+}
+TexturedBackground {
+}
+RectangleArena {
+  floorSize 2 2
+}
+TexturedBackgroundLight {
+}
+DEF e-puck E-puck {
+  translation 0.07 -0.79 0
+  name "robot"
+  controller "Bug_2_left"
+  supervisor TRUE
+  groundSensorsSlot [
+    GPS {
+    }
+  ]
+}
+Solid {
+  translation 0.15 -0.55 0
+  children [
+    Shape {
+      appearance Plaster {
+      }
+      geometry Box {
+        size 0.7 0.1 0.1
+      }
+    }
+  ]
+  name "Wall 0"
+  boundingObject Box {
+    size 0.7 0.1 0.1
+  }
+}
+Solid {
+  translation 0.5 0 0
+  children [
+    Shape {
+      appearance Plaster {
+      }
+      geometry Rectangle {
+        size 1 0.1
+      }
+    }
+  ]
+  name "Wall 1"
+  boundingObject Box {
+    size 0.001 1 0.1
+  }
+}
+Solid {
+  translation 0 0.5 0
+  rotation 0 0 1 1.57
+  children [
+    Shape {
+      appearance Plaster {
+      }
+      geometry Rectangle {
+        size 1 0.1
+      }
+    }
+  ]
+  name "Wall 2"
+  boundingObject Box {
+    size 0.001 1 0.1
+  }
+}
+Solid {
+  translation -0.5 0.1 0
+  children [
+    Shape {
+      appearance Plaster {
+      }
+      geometry Rectangle {
+        size 0.8 0.1
+      }
+    }
+  ]
+  name "Wall 3"
+  boundingObject Box {
+    size 0.001 0.8 0.1
+  }
+}
+Solid {
+  translation -0.15 -0.3 0
+  rotation 0 0 1 1.57
+  children [
+    Shape {
+      appearance Plaster {
+      }
+      geometry Rectangle {
+        size 0.7 0.1
+      }
+    }
+  ]
+  name "Wall 4"
+  boundingObject Box {
+    size 0.001 0.7 0.1
+  }
+}
+Solid {
+  translation 0.2 -0.05 0
+  children [
+    Shape {
+      appearance Plaster {
+      }
+      geometry Rectangle {
+        size 0.5 0.1
+      }
+    }
+  ]
+  name "Wall 5"
+  boundingObject Box {
+    size 0.001 0.5 0.1
+  }
+}
