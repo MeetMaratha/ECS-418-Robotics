@@ -7,7 +7,7 @@ import sys
 TIME_STEP = 32
 SENSING_VALUE = 115
 COUNTER = 0
-GOAL = [(-0.16, 0.18, 0), (0.15, -0.3, 0)]
+GOAL = [(-0.29, 0.45, 0), (0.16, -0.5, 0)]
 ROBOT_NAME = "pursuer"
 MAX_SPEED = 6.28
 COLLISION = False
