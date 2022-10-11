@@ -83,8 +83,8 @@ if __name__ == "__main__":
             _turnRight90(robot, left_motor, right_motor)
             left_speed, right_speed = 0.0, 0.0
         else : 
-            left_speed = MAX_SPEED * 1.0
-            right_speed = MAX_SPEED * 1.0
+            left_speed = MAX_SPEED * 0.25
+            right_speed = MAX_SPEED * 0.25
         left_motor.setVelocity(left_speed)
         right_motor.setVelocity(right_speed)
         

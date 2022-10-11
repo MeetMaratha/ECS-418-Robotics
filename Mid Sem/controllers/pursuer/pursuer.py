@@ -7,8 +7,8 @@ import sys
 TIME_STEP = 32
 SENSING_VALUE = 115
 COUNTER = 0
-GOAL = [(-2.4, -2.54, 0), (-1.86, -1.6, 0)]
-ROBOT_NAME = "pursuer"
+GOAL = [(-0.29, 0.45, 0), (0.16, -0.5, 0)]
+ROBOT_NAME = "pursuer1"
 MAX_SPEED = 6.28
 COLLISION = False
 IDX = 0
@@ -44,8 +44,8 @@ def goToGoal(translation_field, rotation_field, max_speed : float, goal : list) 
     elif position[0] < 0 and position[1] < 0 : desired_angle = slope_theta # For Third Quadrant
 
     elif position[0] < 0.0 and position[1] > 0.0 : desired_angle = slope_theta # For Second Quadrant
-    
-    if np.abs(desired_angle - z_theta) > 1e-2 :
+
+    if np.abs(desired_angle - z_theta) > 1e-1 :
         # If the difference of desired angle and z_theta value is significant we need to rotate
 
         left_speed = - MAX_SPEED * 0.25
@@ -57,7 +57,6 @@ def goToGoal(translation_field, rotation_field, max_speed : float, goal : list) 
         left_speed = MAX_SPEED * 0.25
         right_speed = MAX_SPEED * 0.25
     
-    print(np.abs(desired_angle - z_theta))
     return left_speed, right_speed
 
 
@@ -73,17 +72,6 @@ def _atGoal(point1 : list, point2 : list) -> bool:
     """
     if np.sqrt( (point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2 ) < 1e-1 : return True
     else : return False
-
-def _moveForward20(robot, left_motor, right_motor):
-    temp = 40
-    print(temp)
-    while robot.step(TIME_STEP) != -1:
-        if temp == 0:
-            break
-        left_motor.setVelocity(MAX_SPEED * 0.25)
-        right_motor.setVelocity(MAX_SPEED * 0.25)
-        temp -= 1
-    print("Done")
 
 # =================== MAIN FUCTION ====================
 
@@ -141,6 +129,9 @@ if __name__ == "__main__":
         ps7_value = ps7.getValue()
         ps2_value = ps2.getValue()
 
+        
+
+
         # =============== COLLISION CHECKING ==============
         
         if ps0_value >= SENSING_VALUE or ps7_value >= SENSING_VALUE or ps2_value >= SENSING_VALUE:
@@ -180,13 +171,6 @@ if __name__ == "__main__":
                 # Move forward a bit after turning a bit
                 left_speed = MAX_SPEED * 0.25
                 right_speed = MAX_SPEED * 0.25
-
-
-        # if np.abs(translation_field.getSFVec3f()[0]) < 5e-2 or np.abs(translation_field.getSFVec3f()[1]) < 5e-2:
-            # _moveForward20(robot, left_motor, right_motor)
-            # left_speed = 0.0
-            # right_speed = 0.0
-            # print(goal)
     
         # =============== CHECKING IF IT IS AT THE MID-POINT ==============
         if _atGoal(translation_field.getSFVec3f(), goal):
@@ -199,7 +183,7 @@ if __name__ == "__main__":
         # =============== CHECKING IF IT HAS FOUND THE EVADER ==============
 
         if camera1.getRecognitionNumberOfObjects() > 0 or camera2.getRecognitionNumberOfObjects() > 0 or camera3.getRecognitionNumberOfObjects() > 0 or camera4.getRecognitionNumberOfObjects() > 0:
-            print(f"We have captured the evader !!!!")
+            print(f"We have captured the evade !!!!")
             left_motor.setVelocity(0.0)
             right_motor.setVelocity(0.0)
             sys.exit()
