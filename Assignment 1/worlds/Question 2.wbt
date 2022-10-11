@@ -10,8 +10,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/project
 WorldInfo {
 }
 Viewpoint {
-  orientation -0.4657305196390989 -0.0909154039856043 0.8802439845831548 3.481940422480111
-  position 3.9941155503740617 1.2490458949705707 5.402575521940452
+  orientation 0.33787348389755534 -0.025620225572084102 -0.9408427673743173 3.284027148512797
+  position 2.5273819279018106 -1.0419808428356923 2.230693306149945
 }
 TexturedBackground {
 }
@@ -20,11 +20,10 @@ RectangleArena {
 }
 TexturedBackgroundLight {
 }
-DEF robot E-puck {
-  translation 0.74 0.27 0
-  rotation 0 0 1 2.87979
+DEF e-puck E-puck {
+  translation 0.07 -0.79 0
   name "robot"
-  controller "Bug_0_left"
+  controller "Bug_2_left"
   supervisor TRUE
   groundSensorsSlot [
     GPS {
@@ -32,20 +31,19 @@ DEF robot E-puck {
   ]
 }
 Solid {
-  translation 0.15 -0.5 0
-  rotation 0 0 1 1.57
+  translation 0.15 -0.55 0
   children [
     Shape {
       appearance Plaster {
       }
-      geometry Rectangle {
-        size 0.7 0.1
+      geometry Box {
+        size 0.7 0.1 0.1
       }
     }
   ]
   name "Wall 0"
   boundingObject Box {
-    size 0.001 0.7 0.1
+    size 0.7 0.1 0.1
   }
 }
 Solid {

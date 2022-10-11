@@ -1,0 +1,92 @@
+#VRML_SIM R2022b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/appearances/protos/Plaster.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2022b/projects/robots/gctronic/e-puck/protos/E-puck.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation -0.28745512977573406 -0.8937020438489552 0.3444796150511898 4.7809304049476316
+  position -0.24002692555460886 -0.12504502137618456 3.771931335583958
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  floorSize 2 2
+}
+Solid {
+  translation 0.4 -0.67 0.05
+  children [
+    Shape {
+      appearance Plaster {
+      }
+      geometry Box {
+        size 0.5 0.1 0.1
+      }
+    }
+  ]
+  name "Solid 1"
+  boundingObject Box {
+    size 0.5 0.1 0.1
+  }
+}
+Solid {
+  translation 0.585434 -0.345433 0.05
+  rotation 0 0 -1 4.692820414042842e-06
+  children [
+    Shape {
+      appearance Plaster {
+      }
+      geometry Box {
+        size 0.5 0.1 0.1
+      }
+    }
+  ]
+  name "Solid 2"
+  boundingObject Box {
+    size 0.5 0.1 0.1
+  }
+}
+Solid {
+  translation 0.319736 0.0421499 0.05
+  rotation 0 0 1 2.77402e-06
+  children [
+    Shape {
+      appearance Plaster {
+      }
+      geometry Box {
+        size 0.5 0.1 0.1
+      }
+    }
+  ]
+  name "Solid 3"
+  boundingObject Box {
+    size 0.5 0.1 0.1
+  }
+}
+Solid {
+  translation 0.48 0.43 0.05
+  children [
+    Shape {
+      appearance Plaster {
+      }
+      geometry Box {
+        size 0.5 0.1 0.1
+      }
+    }
+  ]
+  name "Solid 4"
+  boundingObject Box {
+    size 0.5 0.1 0.1
+  }
+}
+DEF e-puck E-puck {
+  translation 0.601971 -0.841859 -6.8017e-05
+  controller "Bug_2_left"
+  supervisor TRUE
+}
