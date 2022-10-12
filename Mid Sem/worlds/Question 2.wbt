@@ -10,7 +10,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation -0.7216936117239039 0.027815639564406795 0.6916535411552014 3.08829353570423
-  position -3.039711564725292 -2.9283240051317136 1.4563270805925645
+  position -2.7656637798585835 -2.967423459228595 1.4680753674466434
 }
 TexturedBackground {
 }
@@ -70,7 +70,7 @@ Solid {
   }
 }
 DEF e-puck E-puck {
-  translation -2.61 -2.66 0
+  translation -2.73 -2.74 0
   rotation 0 0 1 -1.5707953071795862
   controller "Bug_0_left"
   supervisor TRUE
