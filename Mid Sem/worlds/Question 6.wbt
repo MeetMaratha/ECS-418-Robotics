@@ -189,8 +189,6 @@ DEF pursuer1 Robot {
           density -1
           mass 0.005
         }
-        linearVelocity 5.300756588785357e-21 9.300934508124464e-06 0.002031035459789843
-        angularVelocity -0.00046497197129304025 2.623000871980304e-19 2.2329521861197722e-20
       }
     }
     HingeJoint {
@@ -224,8 +222,6 @@ DEF pursuer1 Robot {
         name "right wheel"
         boundingObject USE EPUCK_WHEEL_BOUNDING_OBJECT
         physics USE EPUCK_WHEEL_PHYSICS
-        linearVelocity -3.2792510558915672e-21 9.305465117500495e-06 0.002055225471346356
-        angularVelocity -0.00046535691588624846 -1.612514297385927e-19 4.338469242068245e-19
       }
     }
     DEF BATTERY_CONNECTOR Transform {
@@ -1738,8 +1734,6 @@ DEF pursuer1 Robot {
   supervisor TRUE
   cpuConsumption 1.11
   remoteControl "e-puck_bluetooth"
-  linearVelocity 6.153575024351274e-21 6.977214463520428e-06 0.002035720075453469
-  angularVelocity -0.0004651644401876686 -1.6375614837731807e-19 -1.1710241037351627e-19
 }
 DEF pursuer2 Robot {
   translation -3.64 -3.7025 -0.000284887
@@ -3597,8 +3591,6 @@ DEF evader Robot {
           density -1
           mass 0.005
         }
-        linearVelocity 7.010751447125841e-21 9.300988107786672e-06 0.0009708918028265235
-        angularVelocity -0.0004649748665824906 3.4103209997407974e-19 1.404620868816546e-18
       }
     }
     HingeJoint {
@@ -3632,8 +3624,6 @@ DEF evader Robot {
         name "right wheel"
         boundingObject USE EPUCK_WHEEL_BOUNDING_OBJECT
         physics USE EPUCK_WHEEL_PHYSICS
-        linearVelocity -1.835991559409961e-21 9.305501486200734e-06 0.0009950819290401203
-        angularVelocity -0.00046535851906642203 -8.240669246473076e-20 1.599848384381515e-19
       }
     }
     DEF BATTERY_CONNECTOR Transform {
@@ -5149,8 +5139,6 @@ DEF evader Robot {
   supervisor TRUE
   cpuConsumption 1.11
   remoteControl "e-puck_bluetooth"
-  linearVelocity 2.9990435856711595e-21 6.9772482005776276e-06 0.0009756013391451764
-  angularVelocity -0.00046516668920203435 -8.728949472785707e-20 3.115962620579446e-20
 }
 Solid {
   translation -3.24 -3.95 0.05

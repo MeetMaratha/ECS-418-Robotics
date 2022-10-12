@@ -11,6 +11,7 @@ GOAL = [(-3.24, -3.16, 0), (-3.24, -4.51, 0), (-2.62, -4.245, 0), (-2.62, -2.935
 ROBOT_NAME = "pursuer1"
 MAX_SPEED = 6.28
 COLLISION = False
+TIME = 0
 
 # =================== FUNCTIONS =======================
 
@@ -102,8 +103,6 @@ def _setGoal(position : list, goals : list, exclude : list or None = None) -> li
         elif _distance(position, goal) < distance:
             temp = goal
             distance = _distance(position, goal)
-        print(f"Pursuer 1 : {temp} | Distance {_distance(position, goal)} | Current : {distance} | goal : {goal}")
-    print(f"Pursuer 1 : {temp}")
     return temp
 
 # =================== MAIN FUCTION ====================
@@ -215,15 +214,18 @@ if __name__ == "__main__":
         # =============== CHECKING IF IT HAS FOUND THE EVADER ==============
 
         if camera1.getRecognitionNumberOfObjects() > 0 or camera2.getRecognitionNumberOfObjects() > 0 or camera3.getRecognitionNumberOfObjects() > 0 or camera4.getRecognitionNumberOfObjects() > 0:
-            print(f"We have captured the evade !!!!")
+            print(f"We have captured the evader in {TIME} seconds !!!!")
             left_motor.setVelocity(0.0)
             right_motor.setVelocity(0.0)
+            
             sys.exit()
+            
 
         # ============= SETTING VELOCITY FOR THIS TIMESTEP ===========
         
         left_motor.setVelocity(left_speed)
         right_motor.setVelocity(right_speed)
+        TIME = TIME + TIME_STEP
 
 
 

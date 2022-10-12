@@ -12,6 +12,7 @@ ROBOT_NAME = "pursuer"
 MAX_SPEED = 6.28
 COLLISION = False
 IDX = 0
+TIME = 0
 
 # =================== FUNCTIONS =======================
 
@@ -198,7 +199,7 @@ if __name__ == "__main__":
         # =============== CHECKING IF IT HAS FOUND THE EVADER ==============
 
         if camera1.getRecognitionNumberOfObjects() > 0 or camera2.getRecognitionNumberOfObjects() > 0 or camera3.getRecognitionNumberOfObjects() > 0 or camera4.getRecognitionNumberOfObjects() > 0:
-            print(f"We have captured the evader !!!!")
+            print(f"We have captured the evader in {TIME} seconds !!!!")
             left_motor.setVelocity(0.0)
             right_motor.setVelocity(0.0)
             sys.exit()
@@ -207,7 +208,7 @@ if __name__ == "__main__":
         
         left_motor.setVelocity(left_speed)
         right_motor.setVelocity(right_speed)
-
+        TIME = TIME + TIME_STEP
 
 
 

@@ -5,13 +5,12 @@ import sys
 
 # =================== GLOBALS ==========================
 TIME_STEP = 32
-SENSING_VALUE = 115
+SENSING_VALUE = 100
 COUNTER = 0
-GOAL = [(-3.24, -3.16, 0), (-3.24, -4.51, 0), (-2.62, -4.245, 0), (-2.62, -2.935, 0)]
-ROBOT_NAME = "pursuer2"
+GOAL = [-3.13, -2.8785, 0]
+ROBOT_NAME = "e-puck"
 MAX_SPEED = 6.28
 COLLISION = False
-TIME = 0
 
 # =================== FUNCTIONS =======================
 
@@ -32,7 +31,7 @@ def goToGoal(translation_field, rotation_field, max_speed : float, goal : list) 
 
     z_theta = rot[-2] * rot[-1]
 
-    slope = ( goal[1] - position[1] ) / ( goal[0] - position[0] )
+    slope = ( position[1] - goal[1] ) / ( position[0] - goal[0] )
     slope_theta = np.arctan( slope )
 
     # The desired angle changes based on the quadrant we are in, so make cases for it
@@ -41,7 +40,7 @@ def goToGoal(translation_field, rotation_field, max_speed : float, goal : list) 
     
     elif position[0] > 0.0 and position[1] < 0.0 : desired_angle = 3.14 + slope_theta # For Fourth Quadrant
     
-    elif position[0] < 0 and position[1] < 0 : desired_angle = slope_theta # For Third Quadrant
+    elif position[0] < 0.0 and position[1] < 0.0 : desired_angle = slope_theta # For Third Quadrant
 
     elif position[0] < 0.0 and position[1] > 0.0 : desired_angle = slope_theta # For Second Quadrant
 
@@ -60,51 +59,6 @@ def goToGoal(translation_field, rotation_field, max_speed : float, goal : list) 
     return left_speed, right_speed
 
 
-def _atGoal(point1 : list, point2 : list) -> bool:
-    """Returns if the distance between two points is significant or not
-
-    Args:
-        point1 (list): Point 1
-        point2 (list): Point 2
-
-    Returns:
-        bool: If the distance is significant it return False, else it returns True
-    """
-    if np.sqrt( (point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2 ) < 1e-1 : return True
-    else : return False
-
-def _distance(position : list, goal : list) -> float:
-    """Returns distance between two points
-
-    Args:
-        position (list): Position of the robot
-        goal (list): Goal position
-
-    Returns:
-        float: Distance between Robot and goal
-    """
-    return np.sqrt( (position[0] - goal[0]) ** 2 + (position[1] - goal[1]) ** 2 )
-
-def _setGoal(position : list, goals : list, exclude : list or None = None) -> list:
-    """Returns the newly set goal position
-
-    Args:
-        position (list): Position of the robot
-        goals (list): Goal Loacations which we can choose from
-        exclude (listorNone, optional): Position that needs to be excluded from the computation, most probably it is the current position of robot. Defaults to None.
-
-    Returns:
-        list: Next goal position for the robot
-    """
-    temp = None
-    distance = 100000
-    for goal in goals:
-        if exclude == goal : continue
-        elif _distance(position, goal) < distance:
-            temp = goal
-            distance = _distance(position, goal)
-    return temp
-
 # =================== MAIN FUCTION ====================
 
 if __name__ == "__main__":
@@ -119,7 +73,6 @@ if __name__ == "__main__":
         sys.stderr.write(f"No DEF for {ROBOT_NAME} node found in the current world file\n")
         sys.exit()
     
-
     # ============== COMPONENTS INITALIZATION AND FIELD VALUE POINTERS =============
     translation_field = e_puck.getField("translation")
     rotation_field = e_puck.getField("rotation")
@@ -129,10 +82,6 @@ if __name__ == "__main__":
     ps7 = robot.getDevice("ps7")
     ps0 = robot.getDevice("ps0")
     ps2 = robot.getDevice("ps2")
-    camera1 = robot.getDevice("camera 1")
-    camera2 = robot.getDevice("camera 2")
-    camera3 = robot.getDevice("camera 3")
-    camera4 = robot.getDevice("camera 4")
 
     left_motor.setPosition(float("inf"))
     right_motor.setPosition(float("inf"))
@@ -143,20 +92,6 @@ if __name__ == "__main__":
     ps0.enable(TIME_STEP)
     ps7.enable(TIME_STEP)
     ps2.enable(TIME_STEP)
-
-    camera1.enable(TIME_STEP)
-    camera2.enable(TIME_STEP)
-    camera3.enable(TIME_STEP)
-    camera4.enable(TIME_STEP)
-
-    camera1.recognitionEnable(TIME_STEP)
-    camera2.recognitionEnable(TIME_STEP)
-    camera3.recognitionEnable(TIME_STEP)
-    camera4.recognitionEnable(TIME_STEP)
-    
-    # ============ SETTING GOAL ==================
-
-    goal = _setGoal(translation_field.getSFVec3f(), GOAL)
 
     # ============== LOOP =================
 
@@ -177,7 +112,7 @@ if __name__ == "__main__":
         
         if not COLLISION:
             # If there is no collision go towards goal
-            left_speed, right_speed = goToGoal(translation_field, rotation_field, MAX_SPEED, goal)
+            left_speed, right_speed = goToGoal(translation_field, rotation_field, MAX_SPEED, GOAL)
         
         elif COLLISION:
             # If there is a collision follow the obstacle
@@ -205,26 +140,11 @@ if __name__ == "__main__":
                 left_speed = MAX_SPEED * 0.25
                 right_speed = MAX_SPEED * 0.25
     
-        # =============== CHECKING IF IT IS AT THE MID-POINT AND IF SO, SETTING THE NEW GOAL ==============
-
-        if _atGoal(translation_field.getSFVec3f(), goal):
-            goal = _setGoal(translation_field.getSFVec3f(), GOAL, goal)
-            left_speed = 0.0
-            right_speed = 0.0
-        
-        # =============== CHECKING IF IT HAS FOUND THE EVADER ==============
-
-        if camera1.getRecognitionNumberOfObjects() > 0 or camera2.getRecognitionNumberOfObjects() > 0 or camera3.getRecognitionNumberOfObjects() > 0 or camera4.getRecognitionNumberOfObjects() > 0:
-            print(f"We have captured the evader in {TIME} seconds !!!!")
-            left_motor.setVelocity(0.0)
-            right_motor.setVelocity(0.0)
-            sys.exit()
-
         # ============= SETTING VELOCITY FOR THIS TIMESTEP ===========
         
         left_motor.setVelocity(left_speed)
         right_motor.setVelocity(right_speed)
-        TIME = TIME + TIME_STEP
+        print(GOAL)
 
 
 
