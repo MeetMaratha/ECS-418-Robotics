@@ -7,7 +7,8 @@ import sys
 TIME_STEP = 32
 SENSING_VALUE = 115
 COUNTER = 0
-GOAL = [(-0.29, -0.525, 0), (-0.29, 0.755, 0), (0.24, 0.485, 0), (0.28, 0.825, 0)]
+GOAL = [(-3.24, -3.16, 0), (-3.24, -4.51, 0), (-2.62, -4.245, 0), (-2.62, -2.935, 0)]
+ROBOT_NAME = "pursuer2"
 MAX_SPEED = 6.28
 COLLISION = False
 TIME = 0
@@ -30,38 +31,31 @@ def goToGoal(translation_field, rotation_field, max_speed : float, goal : list) 
     rot = rotation_field.getSFRotation()
 
     z_theta = rot[-2] * rot[-1]
-    desired_angle = np.arctan2( goal[1] - position[1], goal[0] - position[0] )
-    print(f"Robot Angle : {rot[-1]} | Desired Angle : {desired_angle} | Checking Angle : {np.abs(rot[-1] * rot[-2] - desired_angle * rot[-2])}")
-    if np.abs(rot[-1] * rot[-2] - desired_angle ) > 9e-2:
-        left_speed = -max_speed * 0.25
-        right_speed = max_speed * 0.25
+
+    slope = ( goal[1] - position[1] ) / ( goal[0] - position[0] )
+    slope_theta = np.arctan( slope )
+
+    # The desired angle changes based on the quadrant we are in, so make cases for it
+
+    if position[0] > 0.0 and position[1] > 0.0 : desired_angle = slope_theta - 3.14 # For First Quadrant
+    
+    elif position[0] > 0.0 and position[1] < 0.0 : desired_angle = 3.14 + slope_theta # For Fourth Quadrant
+    
+    elif position[0] < 0 and position[1] < 0 : desired_angle = slope_theta # For Third Quadrant
+
+    elif position[0] < 0.0 and position[1] > 0.0 : desired_angle = slope_theta # For Second Quadrant
+
+    if np.abs(desired_angle - z_theta) > 1e-1 :
+        # If the difference of desired angle and z_theta value is significant we need to rotate
+
+        left_speed = - MAX_SPEED * 0.25
+        right_speed = MAX_SPEED * 0.25
+
     else:
-        left_speed = max_speed
-        right_speed = max_speed
-    # slope = ( goal[1] - position[1] ) / ( goal[0] - position[0] )
-    # slope_theta = np.arctan( slope )
+        # We are facing the goal so move forward
 
-    # # The desired angle changes based on the quadrant we are in, so make cases for it
-
-    # if position[0] > 0.0 and position[1] > 0.0 : desired_angle = slope_theta - 3.14 # For First Quadrant
-    
-    # elif position[0] > 0.0 and position[1] < 0.0 : desired_angle = 3.14 + slope_theta # For Fourth Quadrant
-    
-    # elif position[0] < 0 and position[1] < 0 : desired_angle = slope_theta # For Third Quadrant
-
-    # elif position[0] < 0.0 and position[1] > 0.0 : desired_angle = slope_theta # For Second Quadrant
-
-    # if np.abs(desired_angle - z_theta) > 1e-1 :
-        # # If the difference of desired angle and z_theta value is significant we need to rotate
-
-        # left_speed = - MAX_SPEED * 0.25
-        # right_speed = MAX_SPEED * 0.25
-
-    # else:
-        # # We are facing the goal so move forward
-
-        # left_speed = MAX_SPEED * 0.25
-        # right_speed = MAX_SPEED * 0.25
+        left_speed = MAX_SPEED * 0.25
+        right_speed = MAX_SPEED * 0.25
     
     return left_speed, right_speed
 
@@ -163,7 +157,7 @@ if __name__ == "__main__":
     # ============ SETTING GOAL ==================
 
     goal = _setGoal(translation_field.getSFVec3f(), GOAL)
-    
+
     # ============== LOOP =================
 
     while robot.step(TIME_STEP) != -1:
@@ -212,6 +206,7 @@ if __name__ == "__main__":
                 right_speed = MAX_SPEED * 0.25
     
         # =============== CHECKING IF IT IS AT THE MID-POINT AND IF SO, SETTING THE NEW GOAL ==============
+
         if _atGoal(translation_field.getSFVec3f(), goal):
             goal = _setGoal(translation_field.getSFVec3f(), GOAL, goal)
             left_speed = 0.0
@@ -223,9 +218,7 @@ if __name__ == "__main__":
             print(f"We have captured the evader in {TIME} seconds !!!!")
             left_motor.setVelocity(0.0)
             right_motor.setVelocity(0.0)
-            
             sys.exit()
-            
 
         # ============= SETTING VELOCITY FOR THIS TIMESTEP ===========
         

@@ -5,74 +5,59 @@ import sys
 
 # =================== GLOBALS ==========================
 TIME_STEP = 32
-SENSING_VALUE = 115
+SENSING_VALUE = 100
 COUNTER = 0
-GOAL = [-0.355266, -0.290301, 0]
+GOAL = [-3.13, -2.8785, 0]
 ROBOT_NAME = "e-puck"
 MAX_SPEED = 6.28
 COLLISION = False
 
 # =================== FUNCTIONS =======================
 
-# def goToGoal(translation_field, rotation_field, max_speed : float, goal : list) -> tuple:
-    # """This dictates the go to goal procedure
-
-    # Args:
-        # translation_field (_type_): Translation field for the robot to get the position of the robot
-        # rotation_field (_type_): Rotation field for the robot to get the heading angle of the robot and axis-angle representation
-        # max_speed (float): MAX_SPEED of the robot
-        # goal (list): GOAL position
-
-    # Returns:
-        # TUPLE[float]: The left and right motor speed
-    # """
-    # position = translation_field.getSFVec3f()
-    # rot = rotation_field.getSFRotation()
-
-    # z_theta = rot[-2] * rot[-1]
-
-    # slope = ( goal[1] - position[1] ) / ( goal[0] - position[0] )
-    # slope_theta = np.arctan( slope )
-
-    # # The desired angle changes based on the quadrant we are in, so make cases for it
-
-    # if position[0] > 0.0 and position[1] > 0.0 : desired_angle = slope_theta - 3.14 # For First Quadrant
-    
-    # elif position[0] > 0.0 and position[1] < 0.0 : desired_angle = 3.14 + slope_theta # For Fourth Quadrant
-    
-    # elif position[0] < 0 and position[1] < 0 : desired_angle = slope_theta # For Third Quadrant
-
-    # elif position[0] < 0.0 and position[1] > 0.0 : desired_angle = slope_theta # For Second Quadrant
-
-    # if np.abs(desired_angle - z_theta) > 1e-1 :
-        # # If the difference of desired angle and z_theta value is significant we need to rotate
-
-        # left_speed = - MAX_SPEED * 0.25
-        # right_speed = MAX_SPEED * 0.25
-
-    # else:
-        # # We are facing the goal so move forward
-
-        # left_speed = MAX_SPEED * 0.25
-        # right_speed = MAX_SPEED * 0.25
-    
-    # return left_speed, right_speed
-
-
 def goToGoal(translation_field, rotation_field, max_speed : float, goal : list) -> tuple:
+    """This dictates the go to goal procedure
+
+    Args:
+        translation_field (_type_): Translation field for the robot to get the position of the robot
+        rotation_field (_type_): Rotation field for the robot to get the heading angle of the robot and axis-angle representation
+        max_speed (float): MAX_SPEED of the robot
+        goal (list): GOAL position
+
+    Returns:
+        TUPLE[float]: The left and right motor speed
+    """
     position = translation_field.getSFVec3f()
     rot = rotation_field.getSFRotation()
-    robot_angle = np.arctan2(position[1], position[0])
-    # desired_angle = np.arctan2(position[1] - goal[1] , position[0] - goal[0] )
-    desired_angle = np.arctan2(goal[1] - position[1], goal[0] - position[0])
-    print(f"Robot Angle : {rot[-1]} | Calculated Robot Angle : {robot_angle} | Desired Angle : {desired_angle} | Checking Angle : {np.abs(rot[-1] * rot[-2] - desired_angle * rot[-2])}")
-    if np.abs(rot[-1] * rot[-2] - desired_angle ) > 9e-2:
-        left_speed = -max_speed * 0.25
-        right_speed = max_speed * 0.25
+
+    z_theta = rot[-2] * rot[-1]
+
+    slope = ( position[1] - goal[1] ) / ( position[0] - goal[0] )
+    slope_theta = np.arctan( slope )
+
+    # The desired angle changes based on the quadrant we are in, so make cases for it
+
+    if position[0] > 0.0 and position[1] > 0.0 : desired_angle = slope_theta - 3.14 # For First Quadrant
+    
+    elif position[0] > 0.0 and position[1] < 0.0 : desired_angle = 3.14 + slope_theta # For Fourth Quadrant
+    
+    elif position[0] < 0.0 and position[1] < 0.0 : desired_angle = slope_theta # For Third Quadrant
+
+    elif position[0] < 0.0 and position[1] > 0.0 : desired_angle = slope_theta # For Second Quadrant
+
+    if np.abs(desired_angle - z_theta) > 1e-1 :
+        # If the difference of desired angle and z_theta value is significant we need to rotate
+
+        left_speed = - MAX_SPEED * 0.25
+        right_speed = MAX_SPEED * 0.25
+
     else:
-        left_speed = max_speed
-        right_speed = max_speed
+        # We are facing the goal so move forward
+
+        left_speed = MAX_SPEED * 0.25
+        right_speed = MAX_SPEED * 0.25
+    
     return left_speed, right_speed
+
 
 # =================== MAIN FUCTION ====================
 
@@ -159,6 +144,7 @@ if __name__ == "__main__":
         
         left_motor.setVelocity(left_speed)
         right_motor.setVelocity(right_speed)
+        print(GOAL)
 
 
 

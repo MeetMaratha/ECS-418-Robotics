@@ -7,7 +7,8 @@ import sys
 TIME_STEP = 32
 SENSING_VALUE = 115
 COUNTER = 0
-GOAL = [(-0.29, -0.525, 0), (-0.29, 0.755, 0), (0.24, 0.485, 0), (0.28, 0.825, 0)]
+GOAL = [(-0.29, -0.525, 0), (-0.29, 0.755, 0), (0.28, -0.685, 0), (0.28, 0.525, 0)]
+ROBOT_NAME = "pursuer1"
 MAX_SPEED = 6.28
 COLLISION = False
 TIME = 0
@@ -163,7 +164,7 @@ if __name__ == "__main__":
     # ============ SETTING GOAL ==================
 
     goal = _setGoal(translation_field.getSFVec3f(), GOAL)
-    
+
     # ============== LOOP =================
 
     while robot.step(TIME_STEP) != -1:
@@ -212,6 +213,7 @@ if __name__ == "__main__":
                 right_speed = MAX_SPEED * 0.25
     
         # =============== CHECKING IF IT IS AT THE MID-POINT AND IF SO, SETTING THE NEW GOAL ==============
+
         if _atGoal(translation_field.getSFVec3f(), goal):
             goal = _setGoal(translation_field.getSFVec3f(), GOAL, goal)
             left_speed = 0.0
@@ -223,9 +225,7 @@ if __name__ == "__main__":
             print(f"We have captured the evader in {TIME} seconds !!!!")
             left_motor.setVelocity(0.0)
             right_motor.setVelocity(0.0)
-            
             sys.exit()
-            
 
         # ============= SETTING VELOCITY FOR THIS TIMESTEP ===========
         

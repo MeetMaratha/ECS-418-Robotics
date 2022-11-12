@@ -7,10 +7,11 @@ import sys
 TIME_STEP = 32
 SENSING_VALUE = 115
 COUNTER = 0
-GOAL = [(-0.29, -0.525, 0), (-0.29, 0.755, 0), (0.24, 0.485, 0), (0.28, 0.825, 0)]
+GOAL = (3.92, 2.68, 0)
 MAX_SPEED = 6.28
 COLLISION = False
 TIME = 0
+ROBOT_NAME = 'robot'
 
 # =================== FUNCTIONS =======================
 
@@ -31,37 +32,13 @@ def goToGoal(translation_field, rotation_field, max_speed : float, goal : list) 
 
     z_theta = rot[-2] * rot[-1]
     desired_angle = np.arctan2( goal[1] - position[1], goal[0] - position[0] )
-    print(f"Robot Angle : {rot[-1]} | Desired Angle : {desired_angle} | Checking Angle : {np.abs(rot[-1] * rot[-2] - desired_angle * rot[-2])}")
-    if np.abs(rot[-1] * rot[-2] - desired_angle ) > 9e-2:
+    # print(f"Robot Angle : {rot[-1]} | Desired Angle : {desired_angle} | Checking Angle : {np.abs(rot[-1] * rot[-2] - desired_angle * rot[-2])}")
+    if np.abs(z_theta - desired_angle ) > 9e-2:
         left_speed = -max_speed * 0.25
         right_speed = max_speed * 0.25
     else:
         left_speed = max_speed
         right_speed = max_speed
-    # slope = ( goal[1] - position[1] ) / ( goal[0] - position[0] )
-    # slope_theta = np.arctan( slope )
-
-    # # The desired angle changes based on the quadrant we are in, so make cases for it
-
-    # if position[0] > 0.0 and position[1] > 0.0 : desired_angle = slope_theta - 3.14 # For First Quadrant
-    
-    # elif position[0] > 0.0 and position[1] < 0.0 : desired_angle = 3.14 + slope_theta # For Fourth Quadrant
-    
-    # elif position[0] < 0 and position[1] < 0 : desired_angle = slope_theta # For Third Quadrant
-
-    # elif position[0] < 0.0 and position[1] > 0.0 : desired_angle = slope_theta # For Second Quadrant
-
-    # if np.abs(desired_angle - z_theta) > 1e-1 :
-        # # If the difference of desired angle and z_theta value is significant we need to rotate
-
-        # left_speed = - MAX_SPEED * 0.25
-        # right_speed = MAX_SPEED * 0.25
-
-    # else:
-        # # We are facing the goal so move forward
-
-        # left_speed = MAX_SPEED * 0.25
-        # right_speed = MAX_SPEED * 0.25
     
     return left_speed, right_speed
 
@@ -79,37 +56,6 @@ def _atGoal(point1 : list, point2 : list) -> bool:
     if np.sqrt( (point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2 ) < 1e-1 : return True
     else : return False
 
-def _distance(position : list, goal : list) -> float:
-    """Returns distance between two points
-
-    Args:
-        position (list): Position of the robot
-        goal (list): Goal position
-
-    Returns:
-        float: Distance between Robot and goal
-    """
-    return np.sqrt( (position[0] - goal[0]) ** 2 + (position[1] - goal[1]) ** 2 )
-
-def _setGoal(position : list, goals : list, exclude : list or None = None) -> list:
-    """Returns the newly set goal position
-
-    Args:
-        position (list): Position of the robot
-        goals (list): Goal Loacations which we can choose from
-        exclude (listorNone, optional): Position that needs to be excluded from the computation, most probably it is the current position of robot. Defaults to None.
-
-    Returns:
-        list: Next goal position for the robot
-    """
-    temp = None
-    distance = 100000
-    for goal in goals:
-        if exclude == goal : continue
-        elif _distance(position, goal) < distance:
-            temp = goal
-            distance = _distance(position, goal)
-    return temp
 
 # =================== MAIN FUCTION ====================
 
@@ -135,10 +81,6 @@ if __name__ == "__main__":
     ps7 = robot.getDevice("ps7")
     ps0 = robot.getDevice("ps0")
     ps2 = robot.getDevice("ps2")
-    camera1 = robot.getDevice("camera 1")
-    camera2 = robot.getDevice("camera 2")
-    camera3 = robot.getDevice("camera 3")
-    camera4 = robot.getDevice("camera 4")
 
     left_motor.setPosition(float("inf"))
     right_motor.setPosition(float("inf"))
@@ -150,23 +92,11 @@ if __name__ == "__main__":
     ps7.enable(TIME_STEP)
     ps2.enable(TIME_STEP)
 
-    camera1.enable(TIME_STEP)
-    camera2.enable(TIME_STEP)
-    camera3.enable(TIME_STEP)
-    camera4.enable(TIME_STEP)
-
-    camera1.recognitionEnable(TIME_STEP)
-    camera2.recognitionEnable(TIME_STEP)
-    camera3.recognitionEnable(TIME_STEP)
-    camera4.recognitionEnable(TIME_STEP)
-    
-    # ============ SETTING GOAL ==================
-
-    goal = _setGoal(translation_field.getSFVec3f(), GOAL)
     
     # ============== LOOP =================
 
     while robot.step(TIME_STEP) != -1:
+
         ps0_value = ps0.getValue()
         ps7_value = ps7.getValue()
         ps2_value = ps2.getValue()
@@ -180,10 +110,9 @@ if __name__ == "__main__":
             COLLISION = False
         else:
             COUNTER -= 1
-        
+
         if not COLLISION:
-            # If there is no collision go towards goal
-            left_speed, right_speed = goToGoal(translation_field, rotation_field, MAX_SPEED, goal)
+            left_speed, right_speed = goToGoal(translation_field, rotation_field, MAX_SPEED, GOAL)
         
         elif COLLISION:
             # If there is a collision follow the obstacle
@@ -210,23 +139,14 @@ if __name__ == "__main__":
                 # Move forward a bit after turning a bit
                 left_speed = MAX_SPEED * 0.25
                 right_speed = MAX_SPEED * 0.25
-    
-        # =============== CHECKING IF IT IS AT THE MID-POINT AND IF SO, SETTING THE NEW GOAL ==============
-        if _atGoal(translation_field.getSFVec3f(), goal):
-            goal = _setGoal(translation_field.getSFVec3f(), GOAL, goal)
-            left_speed = 0.0
-            right_speed = 0.0
         
-        # =============== CHECKING IF IT HAS FOUND THE EVADER ==============
-
-        if camera1.getRecognitionNumberOfObjects() > 0 or camera2.getRecognitionNumberOfObjects() > 0 or camera3.getRecognitionNumberOfObjects() > 0 or camera4.getRecognitionNumberOfObjects() > 0:
-            print(f"We have captured the evader in {TIME} seconds !!!!")
+        # =============== CHECKING IF IT IS AT THE MID-POINT AND IF SO, SETTING THE NEW GOAL ==============
+        if _atGoal(translation_field.getSFVec3f(), GOAL):
+            print(f"Robot has reached it's goal !!!")
             left_motor.setVelocity(0.0)
             right_motor.setVelocity(0.0)
-            
             sys.exit()
             
-
         # ============= SETTING VELOCITY FOR THIS TIMESTEP ===========
         
         left_motor.setVelocity(left_speed)
