@@ -61,10 +61,10 @@ static const char *receiver_name = "receiver";
 WbDeviceTag left_motor, right_motor, left_position_sensor, right_position_sensor;
 
 /* Misc Stuff */
-#define MAX_SPEED 16
+#define MAX_SPEED 5
 #define NULL_SPEED 0
-#define HALF_SPEED 8
-#define MIN_SPEED -16
+#define HALF_SPEED 2.5
+#define MIN_SPEED -5
 
 #define WHEEL_RADIUS 0.031
 #define AXLE_LENGTH 0.271756
